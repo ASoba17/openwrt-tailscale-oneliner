@@ -46,8 +46,8 @@ _Одна вставка в SSH — Tailscale поднят на OpenWrt 25.12.4 
 Установите Tailscale на роутер один раз перед запуском:
 
 ```sh
-opkg update
-opkg install tailscale
+apk update
+apk add tailscale
 ```
 
 ---

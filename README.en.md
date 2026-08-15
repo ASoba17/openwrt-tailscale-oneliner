@@ -46,8 +46,8 @@ Properties:
 Install Tailscale once before running:
 
 ```sh
-opkg update
-opkg install tailscale
+apk update
+apk add tailscale
 ```
 
 ---
