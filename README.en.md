@@ -4,7 +4,7 @@
 
 <br>
 
-[![GitHub](https://img.shields.io/badge/GITHUB-repo-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/&lt;owner&gt;/openwrt-tailscale-oneliner)
+[![GitHub](https://img.shields.io/badge/GITHUB-repo-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ASoba17/openwrt-tailscale-oneliner)
 [![OpenWrt](https://img.shields.io/badge/OPENWRT-25.12.4-00B5E2?style=for-the-badge&logo=openwrt&logoColor=white)](https://openwrt.org/)
 [![Tailscale](https://img.shields.io/badge/TAILSCALE-mesh-1B6EE8?style=for-the-badge&logo=tailscale&logoColor=white)](https://tailscale.com/)
 [![License](https://img.shields.io/badge/LICENSE-MIT-21B517?style=for-the-badge&logo=mit&logoColor=white)](./LICENSE)
@@ -88,7 +88,7 @@ Topology after running:
 ### Option A: one-liner over the network
 
 ```sh
-ssh root@192.168.1.1 -- sh -c "$(curl -fsSL https://raw.githubusercontent.com/<owner>/openwrt-tailscale-oneliner/main/tailscale-setup.sh)"
+ssh root@192.168.1.1 -- sh -c "$(curl -fsSL https://raw.githubusercontent.com/ASoba17/openwrt-tailscale-oneliner/main/tailscale-setup.sh)"
 ```
 
 ### Option B: paste manually
