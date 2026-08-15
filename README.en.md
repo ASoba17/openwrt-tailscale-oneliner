@@ -85,7 +85,7 @@ Topology after running:
 
 ## 🔗 <a id="install"></a> Install
 
-### Option A: one-liner over the network
+### Option A: one-liner via your router's network
 
 ```sh
 ssh root@192.168.1.1 -- sh -c "$(curl -fsSL https://raw.githubusercontent.com/ASoba17/openwrt-tailscale-oneliner/main/tailscale-setup.sh)"
