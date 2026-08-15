@@ -85,7 +85,7 @@ apk add tailscale
 
 ## 🔗 <a id="установка"></a> Установка
 
-### Вариант A: однострочник по сети
+### Вариант A: однострочник по сети вашего роутера
 
 ```sh
 ssh root@192.168.1.1 -- sh -c "$(curl -fsSL https://raw.githubusercontent.com/ASoba17/openwrt-tailscale-oneliner/main/tailscale-setup.sh)"
