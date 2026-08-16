@@ -32,6 +32,46 @@ fi
 
 say "preflight OK"
 
+# --- 0. auto-detect LAN subnet (for the --advertise-routes hint at the end) ---
+mask2cidr() {
+  # convert dotted-quad netmask to CIDR length
+  case "$1" in
+    255.255.255.255) echo 32 ;;
+    255.255.255.254) echo 31 ;;
+    255.255.255.252) echo 30 ;;
+    255.255.255.248) echo 29 ;;
+    255.255.255.240) echo 28 ;;
+    255.255.255.224) echo 27 ;;
+    255.255.255.192) echo 26 ;;
+    255.255.255.128) echo 25 ;;
+    255.255.255.0)   echo 24 ;;
+    255.255.254.0)   echo 23 ;;
+    255.255.252.0)   echo 22 ;;
+    255.255.248.0)   echo 21 ;;
+    255.255.240.0)   echo 20 ;;
+    255.255.224.0)   echo 19 ;;
+    255.255.192.0)   echo 18 ;;
+    255.255.128.0)   echo 17 ;;
+    255.255.0.0)     echo 16 ;;
+    255.254.0.0)     echo 15 ;;
+    255.252.0.0)     echo 14 ;;
+    255.248.0.0)     echo 13 ;;
+    255.240.0.0)     echo 12 ;;
+    255.224.0.0)     echo 11 ;;
+    255.192.0.0)     echo 10 ;;
+    255.128.0.0)     echo 9 ;;
+    255.0.0.0)       echo 8 ;;
+    *) return 1 ;;
+  esac
+}
+lan_hint() {
+  ip=$(uci -q get network.lan.ipaddr)   || return 1
+  mask=$(uci -q get network.lan.netmask) || return 1
+  cidr=$(mask2cidr "$mask")             || return 1
+  echo "$ip/$cidr"
+}
+LAN_SUBNET=$(lan_hint) || LAN_SUBNET=""
+
 # --- 1. network.tailscale ---
 say "[1/5] configuring network.tailscale"
 uci -q delete network.tailscale
@@ -100,4 +140,10 @@ echo "    tailscale up"
 echo "If you want exit-node routing through this router:"
 echo "    tailscale up --advertise-exit-node"
 echo "If you want subnet routes from LAN (advanced):"
-echo "    tailscale up --advertise-routes=192.168.1.0/24"
+if [ -n "$LAN_SUBNET" ]; then
+  echo "    LAN detected: $LAN_SUBNET"
+  echo "    tailscale up --advertise-routes=$LAN_SUBNET"
+else
+  echo "    tailscale up --advertise-routes=<your-LAN-subnet>/<CIDR>"
+  echo "    (e.g. tailscale up --advertise-routes=192.168.1.0/24)"
+fi

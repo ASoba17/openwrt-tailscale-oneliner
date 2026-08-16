@@ -85,13 +85,31 @@ apk add tailscale
 
 ## 🔗 <a id="установка"></a> Установка
 
-### Вариант A: однострочник по сети вашего роутера
+### Вариант A: авто-детект роутера (рекомендуется)
+
+Враппер сам найдёт gateway в локальной сети (работает на Linux и macOS, не зависит от подсети роутера — `192.168.1.x`, `192.168.10.x`, `10.0.0.x` — всё подхватится) и выполнит SSH под root:
 
 ```sh
-ssh root@192.168.1.1 -- sh -c "$(curl -fsSL https://raw.githubusercontent.com/ASoba17/openwrt-tailscale-oneliner/main/tailscale-setup.sh)"
+curl -fsSL https://raw.githubusercontent.com/ASoba17/openwrt-tailscale-oneliner/main/install.sh | sh
 ```
 
-### Вариант B: ручная вставка
+Если роутер не нашёлся автоматически, переопределите через переменную окружения:
+
+```sh
+ROUTER=192.168.10.1 curl -fsSL https://raw.githubusercontent.com/ASoba17/openwrt-tailscale-oneliner/main/install.sh | sh
+```
+
+Другие переменные окружения: `SSH_USER=…`, `SSH_PORT=…`, `SETUP_URL=…`.
+
+### Вариант B: однострочник, если знаете IP роутера
+
+```sh
+ssh root@<router> -- sh -c "$(curl -fsSL https://raw.githubusercontent.com/ASoba17/openwrt-tailscale-oneliner/main/tailscale-setup.sh)"
+```
+
+Подставьте свой адрес: `192.168.1.1`, `192.168.10.1` и т.п.
+
+### Вариант C: ручная вставка
 
 1. `cat tailscale-setup.sh` на своём ноуте
 2. Скопируйте содержимое
@@ -119,7 +137,10 @@ tailscale up
 tailscale up --advertise-exit-node
 
 # Анонсировать LAN-подсеть в tailnet (чтобы другие пиры видели LAN-устройства)
-tailscale up --advertise-routes=192.168.1.0/24
+# Скрипт определил вашу подсеть и подскажет точную команду в конце вывода,
+# либо укажите вручную:
+tailscale up --advertise-routes=<ваша-LAN-подсеть>/<CIDR>
+# например: tailscale up --advertise-routes=192.168.10.0/24
 ```
 
 Подтвердите маршруты / exit-node в [Tailscale admin](https://login.tailscale.com/admin/machines) — без approve они не активируются.

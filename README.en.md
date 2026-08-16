@@ -85,13 +85,31 @@ Topology after running:
 
 ## 🔗 <a id="install"></a> Install
 
-### Option A: one-liner via your router's network
+### Option A: auto-detect router (recommended)
+
+A tiny wrapper that auto-detects the router's gateway on the local network (Linux + macOS, any subnet — `192.168.1.x`, `192.168.10.x`, `10.0.0.x` all work) and SSHes in as `root`:
 
 ```sh
-ssh root@192.168.1.1 -- sh -c "$(curl -fsSL https://raw.githubusercontent.com/ASoba17/openwrt-tailscale-oneliner/main/tailscale-setup.sh)"
+curl -fsSL https://raw.githubusercontent.com/ASoba17/openwrt-tailscale-oneliner/main/install.sh | sh
 ```
 
-### Option B: paste manually
+If the router wasn't found automatically, override it via an env var:
+
+```sh
+ROUTER=192.168.10.1 curl -fsSL https://raw.githubusercontent.com/ASoba17/openwrt-tailscale-oneliner/main/install.sh | sh
+```
+
+Other env overrides: `SSH_USER=…`, `SSH_PORT=…`, `SETUP_URL=…`.
+
+### Option B: one-liner, if you know your router's IP
+
+```sh
+ssh root@<router> -- sh -c "$(curl -fsSL https://raw.githubusercontent.com/ASoba17/openwrt-tailscale-oneliner/main/tailscale-setup.sh)"
+```
+
+Replace `<router>` with whatever your router's address is: `192.168.1.1`, `192.168.10.1`, etc.
+
+### Option C: paste manually
 
 1. `cat tailscale-setup.sh` on your laptop
 2. Copy the whole file
@@ -117,7 +135,10 @@ Useful `tailscale up` flags:
 tailscale up --advertise-exit-node
 
 # Advertise the LAN subnet so other tailnet nodes can reach it
-tailscale up --advertise-routes=192.168.1.0/24
+# The setup script auto-detects your LAN and prints the exact command
+# at the end of its output — or specify manually:
+tailscale up --advertise-routes=<your-LAN-subnet>/<CIDR>
+# e.g.: tailscale up --advertise-routes=192.168.10.0/24
 ```
 
 Approve the routes / exit-node in the [Tailscale admin panel](https://login.tailscale.com/admin/machines) — they won't activate otherwise.
